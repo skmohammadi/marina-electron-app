@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
+  <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'" />
+  <title>نرم‌افزار آزمایشی</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+
+<body class="loading">
+  <div id="full-content">
+    <div class="main-app-bar">
+      <div class="app-progress-bar">
+        <div class="indeterminate"></div>
+      </div>
+      <ul class="app-list-btns">
+        <li><span id="minimize"></span></li>
+        <li><span id="close"></span></li>
+      </ul>
+    </div>
+    <div class="indicator"></div>
+    <webview id="webview" src="https://google.com/"></webview>
+  </div>
+  <!-- <div class="content-loading"><div class="loading-spinner"></div></div> -->
+  <!-- You can also require other files to run in this process -->
+  <script src="../../renderer.js"></script>
+</body>
+
+</html>
