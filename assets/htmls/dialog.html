@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'"
+    />
+    <title>Marina</title>
+    <link rel="stylesheet" href="../css/dialog.css" />
+  </head>
+
+  <body>
+    <div class="dialog-overlay">
+      <div class="dialog-content">
+        <div class="dialog-header">
+            <h2 id="dialog-title">[Dialog Title]</h2>
+            <p id="dialog-message">[Dialog Message]</p>
+        </div>
+        <div class="dialog-actions">
+          <!-- Pre-defined actions will be appened here automatically -->
+        </div>
+      </div>
+    </div>
+    <script src="../js/dialog_render.js"></script>
+  </body>
+</html>

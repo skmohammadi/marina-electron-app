@@ -9,8 +9,10 @@
 const { remote, ipcRenderer } = require('electron')
 const hasInternet =  typeof window.hasInternet === 'undefined' ? true : window.hasInternet;
 
-document.getElementById('close').addEventListener('click', closeWindow);
-document.getElementById('minimize').addEventListener('click', minimizeWindow);
+const mainWindowsBtnClose = document.getElementById('close')
+const mainWindowsBtnMinimize = document.getElementById('minimize')
+if (mainWindowsBtnClose) mainWindowsBtnClose.addEventListener('click', closeWindow);
+if (mainWindowsBtnMinimize) mainWindowsBtnMinimize.addEventListener('click', minimizeWindow);
 
 function closeWindow() {
   var window = remote.getCurrentWindow()

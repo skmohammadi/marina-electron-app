@@ -11,12 +11,9 @@ function liveCheck() {
   });
 }
 
-// setInterval(function() {
-//   liveCheck();
-// }, 1000);
-
-
-
+setInterval(function() {
+  liveCheck();
+}, 1000);
 
 window.addEventListener("DOMContentLoaded", () => {
   liveCheck();
