@@ -5,7 +5,7 @@ stages:
   - build
   
 build:
-  image: electronjs/build
+  image: electronuserland/builder:win
   stage: build
   artifacts:
     paths:
