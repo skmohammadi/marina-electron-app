@@ -1,15 +1,36 @@
+image: "node"
 variables:
-  VERSION_ID: '1.0.$CI_PIPELINE_ID'
+  VERSION_ID: '1.0.0'
+
+
+before_script:
+  - mkdir -p electron
+  - mkdir -p electron-builder
+  - mkdir -p $HOME/.cache
+  - cp -R electron $HOME/.cache/electron
+  - cp -R electron-builder $HOME/.cache/electron-builder
 
 stages:
   - build
-  
+
 build:
-  image: electronuserland/builder:win
+  dependencies: []
   stage: build
+  image: electronuserland/builder:wine
   artifacts:
     paths:
-      - $CI_PROJECT_DIR/dist/*.*
+    - dist/*.*
+    expire_in: 60 days
+  cache:
+    key: build
+    paths:
+      - node_modules/
+      - electron/
+      - electron-builder/
   script:
+    - rm -rf electron-builder
+    - rm -rf electron
     - sed "s/0.0.0/${VERSION_ID}/g" package.json > _package.json && mv _package.json package.json
-    - npm install && npm run dist
+    - npm i --dev && npm run-script build-win && npm run-script build-linux
+    - cp -R $HOME/.cache/electron electron
+    - cp -R $HOME/.cache/electron-builder electron-builder

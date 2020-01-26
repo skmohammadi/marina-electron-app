@@ -5,32 +5,37 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder --win --mac"
+    "build-linux": "electron-builder --linux",
+    "build-win": "electron-builder --win",
+    "build-mac": "electron-builder --mac"
   },
   "build": {
+    "artifactName": "Marina-${os}-${arch}.${ext}",
     "appId": "com.marina.app",
+    "productName": "Steam Account Generator",
     "publish": [
       {
         "provider": "generic",
         "url": "https://gitlab.com"
       }
     ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ]
+    },
     "win": {
       "target": [
         "nsis"
-      ],
-      "verifyUpdateCodeSignature": false
+      ]
     },
     "mac": {
-      "category": "public.app-category.business",
-      "identity": "Mac Developer: username (XXXXXXXX)",
       "target": [
         "dmg"
       ]
     }
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "",
   "keywords": [
     "Electron",
     "quick",
@@ -38,7 +43,7 @@
     "tutorial",
     "demo"
   ],
-  "author": "GitHub",
+  "author": "MarinaDevTean",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "^7.1.9",
