@@ -5,7 +5,7 @@ stages:
   - build
   
 build:
-  image: skmohammadi/marina-electron-app
+  image: electronjs/build
   stage: build
   artifacts:
     paths:
