@@ -1,22 +1,30 @@
 {
   "name": "electron-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal Electron application",
-  "main": "main.js",
+  "main": "./src/main.js",
   "scripts": {
     "start": "electron .",
-    "build-linux": "electron-builder --linux",
-    "build-win": "electron-builder --win",
-    "build-mac": "electron-builder --mac"
+    "dev": "cross-env NODE_ENV=development electron .",
+    "build:linux": "electron-builder --linux",
+    "build:win": "electron-builder -w && npm run zip",
+    "build:mac": "electron-builder --mac",
+    "server": "node server.js",
+    "source": "http-server update/ -p 4000",
+    "zip": "node update/zipasar.js"
   },
   "build": {
     "artifactName": "Marina-${os}-${arch}.${ext}",
     "appId": "com.marina.app",
-    "productName": "Steam Account Generator",
-    "publish": [
+    "productName": "Marina",
+    "files": [
+      "src/**/*",
       {
-        "provider": "generic",
-        "url": "https://gitlab.com"
+        "from": "node_modules/electron-asar-hot-updater/",
+        "to": "./node_modules/electron-asar-hot-updater",
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "linux": {
@@ -24,32 +32,26 @@
         "AppImage"
       ]
     },
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
     "mac": {
       "target": [
-        "dmg"
+        "zip"
       ]
     }
   },
   "repository": "",
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "MarinaDevTean",
+  "author": "MarinaDevTeam",
   "license": "CC0-1.0",
   "devDependencies": {
+    "adm-zip": "^0.4.13",
+    "body-parser": "^1.19.0",
+    "cross-env": "^7.0.0",
     "electron": "^7.1.9",
-    "electron-builder": "^22.2.0"
+    "electron-builder": "^22.3.2",
+    "express": "^4.17.1",
+    "http-server": "^0.12.1"
   },
   "dependencies": {
-    "electron-updater": "^4.2.0"
+    "electron-asar-hot-updater": "^0.1.2",
+    "electron-log": "^4.0.4"
   }
 }

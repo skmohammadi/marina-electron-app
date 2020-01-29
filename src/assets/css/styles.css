@@ -14,7 +14,7 @@ html {
   box-sizing: border-box;
 }
 
-body.loading {
+body {
   background: url(../images/marina-logo-white.png) center center no-repeat;
 }
 
@@ -144,7 +144,7 @@ body.loading .app-progress-bar.active .indeterminate:after {
 body.loading #webview {
   display: none;
 }
-.loading-spinner {
+body.loading .loading-spinner {
   display: block;
   width: 20px;
   height: 20px;
@@ -209,3 +209,6 @@ body.loading #webview {
     right: -8%;
   }
 }
+
+
+.messages-container {color: white;}

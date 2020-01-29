@@ -10,10 +10,11 @@ function sendSignal(event) {
 }
 
 ipcRenderer.on("set-dialog-data", (event, data) => {
+  console.log({data});
+  
 
   if (dialogWindowTitle) dialogWindowTitle.innerText = data.title;
   if (dialogWindowMessage) dialogWindowMessage.innerText = data.message;
-  
   
   // Build actions elements and then register click listener
   dialogWindowActions.innerHTML = ''
