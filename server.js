@@ -5,9 +5,11 @@ const port = 9999;
 const repositoryUpdateURL =
   "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update";
 const updateInfoURL = `${repositoryUpdateURL}/update-${process.platform}.json?job=build`;
+console.log({updateInfoURL});
+
 
 const getUpdateInfo = () => {
-  request(updateInfoURL, (err, res, body) => {
+  request({url: updateInfoURL, json: true}, (err, res, body) => {
     if (err) {
       throw err;
     }
@@ -20,7 +22,9 @@ module.exports = {
 
   createServer: app => {
     const server = express();
-    const updateInfo = JSON.parse(getUpdateInfo());
+    const updateInfo = getUpdateInfo();
+    console.log({updateInfo});
+    
     const asarURL = `${repositoryUpdateURL}/${updateInfo.asar}`;
 
     server.post("/", (req, res) => {
