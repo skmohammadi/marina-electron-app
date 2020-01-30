@@ -31,6 +31,6 @@ build:
     - rm -rf electron-builder
     - rm -rf electron
     - sed "s/0.0.0/${VERSION_ID}/g" package.json > _package.json && mv _package.json package.json
-    - npm i --dev && npm run-script build-win && npm run-script build-linux
+    - npm i --dev && npm run-script build:win
     - cp -R $HOME/.cache/electron electron
     - cp -R $HOME/.cache/electron-builder electron-builder
