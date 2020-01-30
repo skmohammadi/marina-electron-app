@@ -20,6 +20,7 @@ build:
     paths:
     - dist/*.*
     - update/*.zip
+    - update/*.json
     expire_in: 60 days
   cache:
     key: build
