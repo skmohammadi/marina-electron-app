@@ -7,7 +7,7 @@
     "start": "electron .",
     "dev": "cross-env NODE_ENV=development electron .",
     "build:linux": "electron-builder --linux",
-    "build:win": "electron-builder -w && npm run zip",
+    "build:win": "cross-env USE_HARD_LINKS=false electron-builder -w && npm run zip",
     "build:mac": "electron-builder --mac",
     "server": "node server.js",
     "source": "http-server update/ -p 4000",

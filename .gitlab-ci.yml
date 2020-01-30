@@ -2,9 +2,6 @@ image: "node"
 variables:
   VERSION_ID: '1.0.0'
 
-env:
-  USE_HARD_LINKS: false
-
 before_script:
   - mkdir -p electron
   - mkdir -p electron-builder
