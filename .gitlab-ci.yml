@@ -19,7 +19,8 @@ build:
   artifacts:
     paths:
     - dist/*.*
-    - update/*.(zip|json)
+    - update/*.zip
+    - update/*.json
     expire_in: 60 days
   cache:
     key: build
