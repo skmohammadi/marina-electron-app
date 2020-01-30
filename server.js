@@ -11,7 +11,7 @@ module.exports = {
         JSON.stringify({
           name: "app",
           version: "1.0.2",
-          asar: "http://127.0.0.1:4000/update.zip",
+          asar: "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update/",
           // 'sha1': '203448645d8a32b9a08ca9a0eb88006f874d0c78', // Optional, If set, verify `asar` file legitimacy
           info: "1.fix bug 2.feat..."
         }).replace(/[\\/]/g, "\\/")

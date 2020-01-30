@@ -25,6 +25,16 @@ fs.readdir(dist_path, (err, dirs) => {
         zip.writeZip(path.join(__dirname, `update-${platform}.zip`));
         // remove current update.asar file
         fs.unlinkSync(path.join(__dirname, "update.asar"))
+
+        let version_info = {
+          name: 'Marina',
+          version: require(path.join(path.resolve(__dirname, ".."), 'package.json')).version,
+          url: `update-${platform}.json`
+        }
+        fs.writeFile(path.join(__dirname, `update-${platform}.json`), JSON.stringify(version_info), 'utf8', () => {
+          console.log(`update-${platform}.json`, 'created');
+          
+        });
       });
     }
   });

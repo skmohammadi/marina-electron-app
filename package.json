@@ -6,9 +6,9 @@
   "scripts": {
     "start": "electron .",
     "dev": "cross-env NODE_ENV=development electron .",
-    "build:linux": "electron-builder --linux",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "build:win": "cross-env USE_HARD_LINKS=false electron-builder -w && npm run zip",
-    "build:mac": "electron-builder --mac",
     "server": "node server.js",
     "source": "http-server update/ -p 4000",
     "zip": "node update/zipasar.js"
@@ -26,17 +26,7 @@
           "**/*"
         ]
       }
-    ],
-    "linux": {
-      "target": [
-        "AppImage"
-      ]
-    },
-    "mac": {
-      "target": [
-        "zip"
-      ]
-    }
+    ]
   },
   "repository": "",
   "author": "MarinaDevTeam",
