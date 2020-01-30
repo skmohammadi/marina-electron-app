@@ -1,5 +1,4 @@
 node_modules
 dist
-update/update.asar
-update/update.zip
+update/*.zip
 test.js
