@@ -22,17 +22,17 @@ fs.readdir(dist_path, (err, dirs) => {
         // get everything as a buffer
         zip.toBuffer();
         // or write everything to disk
-        zip.writeZip(path.join(__dirname, `update-${platform}.zip`));
+        zip.writeZip(path.join(__dirname, `update-${process.platform}.zip`));
         // remove current update.asar file
         fs.unlinkSync(path.join(__dirname, "update.asar"))
 
         let version_info = {
           name: 'Marina',
           version: require(path.join(path.resolve(__dirname, ".."), 'package.json')).version,
-          url: `update-${platform}.json`
+          asar: `update-${process.platform}.asar`
         }
-        fs.writeFile(path.join(__dirname, `update-${platform}.json`), JSON.stringify(version_info), 'utf8', () => {
-          console.log(`update-${platform}.json`, 'created');
+        fs.writeFile(path.join(__dirname, `update-${process.platform}.json`), JSON.stringify(version_info), 'utf8', () => {
+          console.log(`update-${process.platform}.json`, 'created');
           
         });
       });

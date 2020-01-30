@@ -1,4 +1,5 @@
 node_modules
 dist
+update/*.json
 update/*.zip
 test.js

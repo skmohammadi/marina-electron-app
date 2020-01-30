@@ -1,17 +1,34 @@
 const express = require("express");
+const request = require("request");
+
 const port = 9999;
+const repositoryUpdateURL =
+  "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update";
+const updateInfoURL = `${repositoryUpdateURL}/update-${process.platform}.json?job=build`;
+
+const getUpdateInfo = () => {
+  request(updateInfoURL, (err, res, body) => {
+    if (err) {
+      throw err;
+    }
+    return body;
+  });
+};
 
 module.exports = {
   port: port,
 
   createServer: app => {
     const server = express();
+    const updateInfo = JSON.parse(getUpdateInfo());
+    const asarURL = `${repositoryUpdateURL}/${updateInfo.asar}`;
+
     server.post("/", (req, res) => {
       res.write(
         JSON.stringify({
-          name: "app",
-          version: "1.0.2",
-          asar: "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update/",
+          name: updateInfo.name,
+          version: updateInfo.version,
+          asar: asarURL,
           // 'sha1': '203448645d8a32b9a08ca9a0eb88006f874d0c78', // Optional, If set, verify `asar` file legitimacy
           info: "1.fix bug 2.feat..."
         }).replace(/[\\/]/g, "\\/")
