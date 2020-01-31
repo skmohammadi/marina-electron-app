@@ -41,7 +41,7 @@ fs.readdir(dist_path, (err, dirs) => {
               path.resolve(__dirname, ".."),
               "package.json"
             )).version,
-            asar: `update-${getPlatform(platform)}.asar`
+            asar: `update-${getPlatform(platform)}.zip`
           };
           fs.writeFile(
             path.join(__dirname, `update-${getPlatform(platform)}.json`),

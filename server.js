@@ -1,33 +1,30 @@
 const express = require("express");
-const request = require("request");
+const axios = require("axios");
 
-const port = 9999;
+const port = 3000;
 const repositoryUpdateURL =
   "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update";
 const updateInfoURL = `${repositoryUpdateURL}/update-${process.platform}.json?job=build`;
-console.log({updateInfoURL});
 
-
-const getUpdateInfo = () => {
-  request({url: updateInfoURL, json: true}, (err, res, body) => {
-    if (err) {
-      throw err;
-    }
-    return body;
-  });
+const getUpdateInfo = async () => {
+  try{
+    const response = await axios.get(updateInfoURL)
+    return response.data
+  } catch (err) {
+    throw err
+  }
 };
 
 module.exports = {
   port: port,
 
-  createServer: app => {
-    const server = express();
-    const updateInfo = getUpdateInfo();
-    console.log({updateInfo});
-    
-    const asarURL = `${repositoryUpdateURL}/${updateInfo.asar}`;
+  createServer: (app) => {
+    const server = express()
 
-    server.post("/", (req, res) => {
+    server.post("/", async (req, res) => {
+      const updateInfo = await getUpdateInfo();      
+      const asarURL = `${repositoryUpdateURL}/${updateInfo.asar}`;      
+  
       res.write(
         JSON.stringify({
           name: updateInfo.name,
