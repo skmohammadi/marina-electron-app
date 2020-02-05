@@ -7,7 +7,7 @@ const repositoryUpdateURL =
 const updateInfoURL = `${repositoryUpdateURL}/update-${process.platform}.json?job=build`;
 
 const getUpdateInfo = async () => {
-  try{
+  try {
     const response = await axios.get(updateInfoURL)
     return response.data
   } catch (err) {
@@ -22,7 +22,9 @@ module.exports = {
     const server = express()
 
     server.post("/", async (req, res) => {
-      const updateInfo = await getUpdateInfo();      
+      const updateInfo = await getUpdateInfo();
+      console.log({updateInfo});
+      
       const asarURL = `${repositoryUpdateURL}/${updateInfo.asar}`;      
   
       res.write(
