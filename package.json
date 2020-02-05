@@ -33,14 +33,12 @@
   "license": "CC0-1.0",
   "devDependencies": {
     "adm-zip": "^0.4.13",
-    "body-parser": "^1.19.0",
     "cross-env": "^7.0.0",
     "electron": "^7.1.9",
-    "electron-builder": "^22.3.2",
-    "express": "^4.17.1",
-    "http-server": "^0.12.1"
+    "electron-builder": "^22.3.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "axios": "^0.19.2",
     "electron-asar-hot-updater": "^0.1.2",
     "electron-log": "^4.0.4"
