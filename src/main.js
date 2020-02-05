@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { createServer, port } = require("../server");
+const { createServer, port } = require("./server");
 
 const EAU = require("electron-asar-hot-updater");
 
