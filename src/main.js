@@ -243,14 +243,22 @@ function checkForUpdate() {
     }
 
     initUpdateDialog();
+
+    EAU.progress(function(state) {
+      console.log({state});
+    });
   });
 
   ipcMain.on("app-download-update", event => {
-    EAU.progress(function(state) {
-      console.log(state);
-    });
+    dialogWindow.data = {
+      title: "New update released!",
+      message: "Downloading updates...",
+    };
+    dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
 
     EAU.download(function(error) {
+      console.log('download');
+      
       if (error) {
         dialog.showErrorBox("error", error);
         return false;
