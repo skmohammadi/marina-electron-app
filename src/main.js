@@ -26,6 +26,8 @@ app.on("ready", () => {
   }, 3000);
 
   mainWindow.on("show", () => {
+    console.log("mainWindow");
+
     if (!app.online) {
       showDialog();
     }
@@ -84,6 +86,9 @@ ipcMain.on("app-is-offline", event => {
   // if (dialogWindow.data && mainWindow.isVisible()) {
   //   showDialog();
   // }
+});
+ipcMain.on("app-close-dialog", event => {
+  dialogWindow.destroy();
 });
 
 function createMainWindow() {
@@ -199,7 +204,7 @@ function initUpdateDialog() {
         {
           id: "cancel",
           label: "CANCEL",
-          callback: "cancel-update"
+          callback: "close-dialog"
         }
       ]
     };
@@ -225,82 +230,32 @@ function checkForUpdate() {
 
   EAU.check(function(error, last, body) {
     if (error) {
-      console.log({ error });
-
-      // if (error === 'no_update_available') { return false; }
+      if (error === "no_update_available") {
+        return false;
+      }
       if (
         error === "version_not_specified" &&
         process.env.NODE_ENV === "development"
       ) {
         return false;
       } // Don't worry about this error when developing
-      // dialog.showErrorBox("info", error);
-      // return false;
+      return false;
     }
 
     initUpdateDialog();
-    // setTimeout(() => {
-    //   showDialog();
+  });
 
-    // }, 1000)
+  ipcMain.on("app-download-update", event => {
+    EAU.progress(function(state) {
+      console.log(state);
+    });
 
-    // dialog.showMessageBox(
-    //   {
-    //     type: "info",
-    //     buttons: ["OK", "Cancel"],
-    //     title: "Update or not",
-    //     message: `Update or not ${last}`,
-    //     detail: body.info,
-    //     defaultId: 0
-    //   },
-    //   callIndex => {
-    //     switch (callIndex) {
-    //       case 0:
-    //         EAU.progress(function(state) {
-    //           console.log(state);
-    //         });
-
-    //         EAU.download(function(error) {
-    //           if (error) {
-    //             dialog.showErrorBox("error", error);
-    //             return false;
-    //           }
-    //           if (process.platform === "darwin") {
-    //             dialog.showMessageBox(
-    //               {
-    //                 type: "info",
-    //                 buttons: ["ok", "cancel"],
-    //                 title: `Update completed!`,
-    //                 message: `Update completed! `,
-    //                 detail: `Restart the application to experience new features.`,
-    //                 defaultId: 0
-    //               },
-    //               updateIndex => {
-    //                 switch (updateIndex) {
-    //                   case 0:
-    //                     app.relaunch();
-    //                     app.quit();
-    //                     break;
-
-    //                   default:
-    //                     break;
-    //                 }
-    //               }
-    //             );
-    //           } else {
-    //             app.quit();
-    //           }
-    //           app.quit();
-    //         });
-    //         break;
-
-    //       case 1:
-    //         break;
-
-    //       default:
-    //         break;
-    //     }
-    //   }
-    // );
+    EAU.download(function(error) {
+      if (error) {
+        dialog.showErrorBox("error", error);
+        return false;
+      }
+      restartApp();
+    });
   });
 }
