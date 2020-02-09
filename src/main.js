@@ -263,7 +263,9 @@ function checkForUpdate() {
         dialog.showErrorBox("error", error);
         return false;
       }
-      restartApp();
+      // restartApp();
+      app.exit(0);
+
     });
   });
 }

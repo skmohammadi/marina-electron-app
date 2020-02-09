@@ -1,6 +1,6 @@
 {
   "name": "electron-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A minimal Electron application",
   "main": "./src/main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "build:win": "cross-env USE_HARD_LINKS=false electron-builder -w && npm run zip",
+    "build:win": "cross-env USE_HARD_LINKS=false electron-builder -w",
     "server": "node server.js",
     "source": "http-server update/ -p 4000",
     "zip": "node update/zipasar.js"
