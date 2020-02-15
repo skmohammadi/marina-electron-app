@@ -245,26 +245,25 @@ function checkForUpdate() {
     initUpdateDialog();
 
     EAU.progress(function(state) {
-      console.log({state});
+      let percent = parseInt(parseFloat(state.percent) * 100);
+      let message = `Downloading updates... ${percent}%`;
+      dialogWindow.webContents.send("update-dialog-message", message);
     });
   });
 
   ipcMain.on("app-download-update", event => {
-    dialogWindow.data = {
-      title: "New update released!",
-      message: "Downloading updates...",
-    };
-    dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
-
     EAU.download(function(error) {
-      console.log('download');
+      let message = `Downloading updates... 100%`;
+      dialogWindow.webContents.send("update-dialog-message", message);
       
       if (error) {
         dialog.showErrorBox("error", error);
         return false;
       }
       // restartApp();
-      app.exit(0);
+      setTimeout(function() {
+        app.exit(0);
+      }, 2000);
 
     });
   });

@@ -10,8 +10,6 @@ function sendSignal(event) {
 }
 
 ipcRenderer.on("set-dialog-data", (event, data) => {
-  console.log({data});
-  
 
   if (dialogWindowTitle) dialogWindowTitle.innerText = data.title;
   if (dialogWindowMessage) dialogWindowMessage.innerText = data.message;
@@ -33,3 +31,8 @@ ipcRenderer.on("set-dialog-data", (event, data) => {
   });
 
 });
+
+
+ipcRenderer.on('update-dialog-message', (event, message) => {
+  if (dialogWindowMessage) dialogWindowMessage.innerText = message;
+})
