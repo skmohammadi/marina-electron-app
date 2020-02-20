@@ -28,7 +28,12 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   const loadstop = () => {
-    document.body.className = document.body.className.replace("loading","");
+    if (document.body.classList.contains('splash-loading')) {
+      document.body.classList.remove('splash-loading')
+    }
+    
+    // document.body.className = document.body.className.replace("loading","");
+    document.body.classList.remove('loading')
   };
 
   webview.addEventListener("did-start-loading", loadstart);

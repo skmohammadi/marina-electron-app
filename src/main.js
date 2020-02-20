@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+
 const path = require("path");
 const { createServer, port } = require("./server");
 
@@ -11,6 +12,7 @@ const ASSETS_DIR = path.join(__dirname, "assets");
 let mainWindow;
 let splashWindow;
 let dialogWindow;
+let messageExist = false;
 
 app.on("ready", () => {
   app.server = createServer(app);
@@ -27,21 +29,17 @@ app.on("ready", () => {
 
   mainWindow.on("show", () => {
     console.log("mainWindow");
-
-    if (!app.online) {
+    
+    if (typeof app.online !== 'undefined' && app.online === false) {
       showDialog();
     }
   });
 
-  dialogWindow.webContents.on("dom-ready", () => {
-    mainWindow.isVisible() && showDialog();
-  });
-
-  // dialogWindow.on('ready-to-show', () => {
-  //   console.log('dialogWindow is ready');
-
-  //   mainWindow.isVisible() && showDialog()
-  // });
+  if (dialogWindow) {
+    dialogWindow.webContents.on("dom-ready", () => {
+      mainWindow.isVisible() && showDialog();      
+    });
+  }
 });
 
 // Quit when all windows are closed.
@@ -106,8 +104,8 @@ function createMainWindow() {
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       webviewTag: true,
-      nodeIntegration: true
-      // devTools: false
+      nodeIntegration: true,
+      devTools: process.env.NODE_ENV === "development"
     },
     show: false
   });
@@ -115,9 +113,9 @@ function createMainWindow() {
   mainWindow.loadFile(path.join(ASSETS_DIR, "htmls", "index.html"));
 
   // Open the DevTools.
-  if (process.env.NODE_ENV === "development") {
-    mainWindow.webContents.openDevTools();
-  }
+  // if (process.env.NODE_ENV === "development") {
+  //   mainWindow.webContents.openDevTools();
+  // }
 
   mainWindow.on("closed", function() {
     console.log("mainWindow: closed");
@@ -150,6 +148,7 @@ function createDialogWindow() {
     parent: mainWindow,
     useContentSize: true,
     center: false,
+    paintWhenInitiallyHidden: false,
     // modal: true,
     webPreferences: {
       nodeIntegration: true
@@ -157,9 +156,9 @@ function createDialogWindow() {
   });
 }
 
-function showDialog() {
+function showDialog() {  
   sendMessage("change-loading-status", "off");
-
+  // if (!dialogWindow) createDialogWindow();
   dialogWindow.show();
   dialogWindow.webContents.send("set-dialog-data", dialogWindow.data);
 }
@@ -255,7 +254,7 @@ function checkForUpdate() {
     EAU.download(function(error) {
       let message = `Downloading updates... 100%`;
       dialogWindow.webContents.send("update-dialog-message", message);
-      
+
       if (error) {
         dialog.showErrorBox("error", error);
         return false;
@@ -264,7 +263,6 @@ function checkForUpdate() {
       setTimeout(function() {
         app.exit(0);
       }, 2000);
-
     });
   });
 }

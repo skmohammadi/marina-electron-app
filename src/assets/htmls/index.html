@@ -10,20 +10,20 @@
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
 
-<body class="loading">
+<body class="splash-loading">
   <div class="messages-container"></div>
   <div id="full-content">
+    <div class="app-progress-bar">
+      <div class="indeterminate"></div>
+    </div>
     <div class="main-app-bar">
-      <div class="app-progress-bar">
-        <div class="indeterminate"></div>
-      </div>
       <ul class="app-list-btns">
         <li><span id="minimize"></span></li>
         <li><span id="close"></span></li>
       </ul>
     </div>
     <div class="indicator"></div>
-    <webview id="webview" src="https://google.com/"></webview>
+    <webview id="webview" src="https://google.com/" autosize="on"></webview>
   </div>
   <div class="content-loading"><div class="loading-spinner"></div></div>
   <!-- <div class="content-loading"><div class="loading-spinner"></div></div> -->

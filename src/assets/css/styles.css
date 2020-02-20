@@ -14,7 +14,7 @@ html {
   box-sizing: border-box;
 }
 
-body {
+body.splash-loading {
   background: url(../images/marina-logo-white.png) center center no-repeat;
 }
 
@@ -30,18 +30,18 @@ body {
   background-position: center;
 }
 .main-app-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 4px;
   right: 0;
-  display: grid;
-  /* border-top: 2px solid #9d4dae; */
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  height: 30px;
+  padding: 0 4px;
   user-select: none;
   -webkit-app-region: drag;
+  background-color: #fdf5ff;
 }
 
 .app-progress-bar {
@@ -50,7 +50,7 @@ body {
   display: block;
   width: 100%;
   background-color: #eeabff;
-  margin: 0 0 1rem 0;
+  margin: 0;
   overflow: hidden;
 }
 .app-progress-bar .indeterminate {
@@ -87,16 +87,16 @@ body.loading .app-progress-bar.active .indeterminate:after {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  padding: 0 0.5em;
+  min-width: 51px;
+  width: 50px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .app-list-btns li {
   height: 20px;
-  float: left;
   margin: 0;
-  margin-right: 10px;
-}
-.app-list-btns li:last-child {
-  margin-right: 5px;
 }
 
 .app-list-btns span {
@@ -126,7 +126,7 @@ body.loading .app-progress-bar.active .indeterminate:after {
 #webview {
   height: 100%;
   width: 100%;
-  margin-bottom: -3px;
+  padding-top: 30px;
   display: inline-flex;
   transition: all 1s ease-in;
 }
@@ -141,7 +141,7 @@ body.loading .app-progress-bar.active .indeterminate:after {
   width: 40px;
   height: 40px;
 }
-body.loading #webview {
+body.splash-loading #webview {
   display: none;
 }
 body.loading .loading-spinner {
