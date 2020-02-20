@@ -18,7 +18,8 @@ if (mainWindowsBtnMinimize) mainWindowsBtnMinimize.addEventListener('click', min
 
 function closeWindow() {
   var window = remote.getCurrentWindow()
-  window.close()
+  ipcRenderer.send('app-confirm-exit');
+  // window.close()
 }
 
 function minimizeWindow() {

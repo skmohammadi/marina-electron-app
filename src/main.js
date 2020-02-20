@@ -7,12 +7,9 @@ const EAU = require("electron-asar-hot-updater");
 
 const ASSETS_DIR = path.join(__dirname, "assets");
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
 let splashWindow;
 let dialogWindow;
-let messageExist = false;
 
 app.on("ready", () => {
   app.server = createServer(app);
@@ -75,18 +72,36 @@ ipcMain.on("app-is-online", event => {
     checkForUpdate();
   }
 });
+ipcMain.on('app-confirm-exit', event => {
+  dialogWindow.data = {
+    title: "Please wait",
+    message: "Are you sure to exit app?",
+    actions: [
+      {
+        id: "exit",
+        label: "EXIT",
+        callback: "quit"
+      },
+      {
+        id: "cancel",
+        label: "CANCEL",
+        callback: "close-dialog"
+      }
+    ]
+  };
+
+  dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
+
+})
 ipcMain.on("app-is-offline", event => {
   console.log("app-is-offline");
 
   app.online = false;
   initConnectionLostDialog();
-
-  // if (dialogWindow.data && mainWindow.isVisible()) {
-  //   showDialog();
-  // }
 });
+
 ipcMain.on("app-close-dialog", event => {
-  dialogWindow.destroy();
+  dialogWindow.hide();
 });
 
 function createMainWindow() {
@@ -111,11 +126,6 @@ function createMainWindow() {
   });
 
   mainWindow.loadFile(path.join(ASSETS_DIR, "htmls", "index.html"));
-
-  // Open the DevTools.
-  // if (process.env.NODE_ENV === "development") {
-  //   mainWindow.webContents.openDevTools();
-  // }
 
   mainWindow.on("closed", function() {
     console.log("mainWindow: closed");
@@ -149,7 +159,7 @@ function createDialogWindow() {
     useContentSize: true,
     center: false,
     paintWhenInitiallyHidden: false,
-    // modal: true,
+    modal: true,
     webPreferences: {
       nodeIntegration: true
     }
@@ -158,7 +168,6 @@ function createDialogWindow() {
 
 function showDialog() {  
   sendMessage("change-loading-status", "off");
-  // if (!dialogWindow) createDialogWindow();
   dialogWindow.show();
   dialogWindow.webContents.send("set-dialog-data", dialogWindow.data);
 }
@@ -168,7 +177,6 @@ function sendMessage(event, data) {
 }
 
 function initConnectionLostDialog() {
-  // if (!dialogWindow.data) {
   dialogWindow.data = {
     title: "Connection Lost ...",
     message: "Check your internet connection and try again",
@@ -186,7 +194,6 @@ function initConnectionLostDialog() {
     ]
   };
   dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
-  // }
 }
 
 function initUpdateDialog() {

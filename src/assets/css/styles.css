@@ -44,6 +44,8 @@ body.splash-loading {
   background-color: #fdf5ff;
 }
 
+body.splash-loading .main-app-bar {display: none;}
+
 .app-progress-bar {
   position: relative;
   height: 4px;
