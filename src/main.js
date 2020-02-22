@@ -168,6 +168,7 @@ function createDialogWindow() {
 function showDialog() {
     sendMessage("change-loading-status", "off");
     dialogWindow.show();
+    mainWindow.webContents.send('dialog-shown');
     dialogWindow.webContents.send("set-dialog-data", dialogWindow.data);
 }
 

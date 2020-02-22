@@ -207,7 +207,7 @@ body.loading .app-progress-bar.active .indeterminate:after {
   display: inline-flex;
   transition: all 1s ease-in;
 }
-.dialog-overlay {
+body.dialog-shown .dialog-overlay {
   position: absolute;
   /* display: none; */
   height: 100%;

@@ -59,6 +59,10 @@ ipcRenderer.on('message', (event, data) => {
   showMessage(data.msg, data.hide, data.replaceAll)
 })
 
+ipcRenderer.on('dialog-shown', (event) => {
+  document.body.classList.add('dialog-shown');
+})
+
 function showMessage(message, hide = true, replaceAll = false) {
   const messagesContainer = document.querySelector('.messages-container')
   const msgId = lastMsgId++ + 1
