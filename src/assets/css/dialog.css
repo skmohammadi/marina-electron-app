@@ -40,6 +40,7 @@ body {
   border-image-repeat: stretch;
   border-style: solid;
   border-color: transparent;
+  z-index: 5;
 }
 .dialog-content::before {
   top: -6px;
@@ -55,13 +56,14 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   text-align: center;
 }
 
 .dialog-header h2 {
   color: #fff;
   font-size: 18px;
+  line-height: 52px;
+  height: 46px;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin: 0;
@@ -73,11 +75,24 @@ body {
 }
 
 .dialog-actions {
-  width: 100%;
+  position: relative;
+  width: auto;
   margin-top: 5px;
   margin-bottom: -2px;
   display: flex;
   justify-content: center;
+  z-index: 10;
+}
+.dialog-actions::before {
+  content: '';
+  bottom: 0px;
+  position: absolute;
+  width: calc(100% - -2px);
+  height: 12px;
+  border-radius: 2px 2px 0 0;
+  background-color: #2b0033;
+  border-right: 2px solid #9f34b3;
+  border-left: 2px solid #9f34b3;
 }
 .dialog-action-btn {
   display: block;
@@ -104,7 +119,7 @@ body {
   outline: 0;
   border-radius: 0;
   background: linear-gradient(0deg,#9f34b3,#e867ff);
-  box-shadow: 0px 0px 1px 1px #040D15;
+  box-shadow: 0px 0px 1px 1px #2b0033;
   color: #F5A0E6;
   z-index: 0;
 }
