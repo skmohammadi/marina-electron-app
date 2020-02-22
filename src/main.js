@@ -26,14 +26,16 @@ app.on("ready", () => {
 
     mainWindow.on("show", () => {
         console.log("mainWindow");
-
         if (typeof app.online !== 'undefined' && app.online === false) {
             showDialog();
         }
+        if (dialogWindow.ready) showDialog();
     });
 
     if (dialogWindow) {
+        
         dialogWindow.webContents.on("dom-ready", () => {
+            dialogWindow.ready = true;
             mainWindow.isVisible() && showDialog();
         });
     }
@@ -60,6 +62,7 @@ ipcMain.on("app-quit", quitApp);
 ipcMain.on("app-restart", restartApp);
 ipcMain.on("app-check-network", () => {
     dialogWindow.hide();
+    mainWindow.webContents.send('set-dialog-visibility', false);
     sendMessage("change-loading-status", "on");
     sendMessage("check-connection");
 });
