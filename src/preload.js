@@ -4,40 +4,39 @@ const { ipcRenderer } = require('electron')
 const dns = require("dns");
 
 function liveCheck() {
-  dns.resolve("www.google.com", function(err, addr) {
-    if (err) {
-      console.log('liveCheck');
-      
-      window.hasInternet = false;
-      ipcRenderer.send('app-is-offline');
-    }
-    else {
-      ipcRenderer.send('app-is-online');
-    }
-  });
+    dns.resolve("www.google.com", function(err, addr) {
+        if (err) {
+            console.log('liveCheck');
+
+            window.hasInternet = false;
+            ipcRenderer.send('app-is-offline');
+        } else {
+            ipcRenderer.send('app-is-online');
+        }
+    });
 }
 
 liveCheck();
 
 window.addEventListener("DOMContentLoaded", () => {
 
-  const webview = document.getElementById("webview");
+    const webview = document.getElementById("webview");
 
-  const loadstart = () => {
-    document.body.classList.add('loading')
-  };
+    const loadstart = () => {
+        document.body.classList.add('loading')
+    };
 
-  const loadstop = () => {
-    if (document.body.classList.contains('splash-loading')) {
-      document.body.classList.remove('splash-loading')
-    }
-    
-    // document.body.className = document.body.className.replace("loading","");
-    document.body.classList.remove('loading')
-  };
+    const loadstop = () => {
+        if (document.body.classList.contains('splash-loading')) {
+            setTimeout(() => {
+                document.body.classList.remove('splash-loading')
+            }, 2000);
+        }
 
-  webview.addEventListener("did-start-loading", loadstart);
-  webview.addEventListener("did-stop-loading", loadstop);
+        // document.body.className = document.body.className.replace("loading","");
+        document.body.classList.remove('loading')
+    };
+
+    webview.addEventListener("did-start-loading", loadstart);
+    webview.addEventListener("did-stop-loading", loadstop);
 });
-
-

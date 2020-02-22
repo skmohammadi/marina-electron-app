@@ -2,7 +2,8 @@ const express = require("express");
 const axios = require("axios");
 
 const port = 3000;
-// const repositoryUpdateURL = "https://gitlab.com/skmohammadi/marina-electron-app/-/jobs/artifacts/master/raw/update";
+// const serverList = "https://github.com/Behnam-Sohrabi/list/blob/master/list.json";
+
 // const repositoryUpdateURL = "http://localhost:8887";
 const repositoryUpdateURL = 'http://104.237.232.204:5000/updates';
 // const updateInfoURL = `${repositoryUpdateURL}/update-${process.platform}.json?job=build`;

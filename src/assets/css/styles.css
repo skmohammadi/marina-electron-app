@@ -4,6 +4,38 @@ html {
   height: 100%;
 }
 
+body::before {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(-10deg, #e867ff, #270930), linear-gradient(-45deg, #e867ff, transparent), linear-gradient(45deg, #270930, transparent);
+  background-blend-mode: multiply;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+body::after {
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  background-position: center top;
+  background-repeat: repeat;
+  background-image: url(../images/body-bg.jpg);
+  background-attachment: fixed;
+  opacity: 0.3;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
 ::selection {
   color: none;
   background: none;
@@ -14,9 +46,9 @@ html {
   box-sizing: border-box;
 }
 
-body.splash-loading {
+/* body.splash-loading {
   background: url(../images/marina-logo-white.png) center center no-repeat;
-}
+} */
 
 #full-content {
   width: 100%;
@@ -35,27 +67,74 @@ body.splash-loading {
   align-items: center;
   position: fixed;
   left: 0;
-  top: 4px;
   right: 0;
-  height: 30px;
-  padding: 0 4px;
+  height: 20px;
+  padding: 0;
+  padding-right: 8px;
   user-select: none;
   -webkit-app-region: drag;
-  background-color: #fdf5ff;
+}
+.splash-screen-loading{
+  display: none;
+  position: fixed;
+  width: 300px;
+  height: 110px;
+  background: url(../images/marina-logo-white.png) center no-repeat;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  /* background-color: #270930; */
+}
+.splash-screen-loading .progress-bar{
+  position: relative;
+  width: 300px;
+  height: 24px;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  left: 50%;
+  bottom: -110px;
+}
+.splash-screen-loading .progress-bar::before{
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(-45deg,#E3B4EF 0%, #703596 25%, #E3B4EF 50%, #703596 75%, #E3B4EF 100%);
+  background-size: 200% 100%;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
+  left: 50%;
+  bottom: 7px;
+  animation: Animation-bar 3s linear infinite;
+}
+@keyframes Animation-bar {
+  0%{background-position:0% 50%}
+  100%{background-position:-200% 50%}
+}
+.splash-screen-loading .progress-bar::after{
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url(../images/border-progress-bar.png) center no-repeat;
 }
 
 body.splash-loading .main-app-bar {display: none;}
+/* body.splash-loading .app-progress-bar {display: block;} */
+body.splash-loading .splash-screen-loading {display: flex;}
 
-.app-progress-bar {
-  position: relative;
-  height: 4px;
+.app-line-top {
+  position: absolute;
+  height: 2px;
   display: block;
   width: 100%;
-  background-color: #eeabff;
+  background-color: #9d4dae;
   margin: 0;
   overflow: hidden;
 }
-.app-progress-bar .indeterminate {
+/* .app-progress-bar .indeterminate {
   background-color: #b166c3;
 }
 body.loading .app-progress-bar .indeterminate:before {
@@ -82,29 +161,25 @@ body.loading .app-progress-bar.active .indeterminate:after {
     infinite;
   -webkit-animation-delay: 1.15s;
   animation-delay: 1.15s;
-}
+} */
 
 .app-list-btns {
   justify-self: right;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  padding: 0 0.5em;
-  min-width: 51px;
-  width: 50px;
+  min-width: 30px;
+  width: 30px;
+  height: 20px;
   display: flex;
   justify-content: space-between;
 }
 
-.app-list-btns li {
-  height: 20px;
-  margin: 0;
-}
-
 .app-list-btns span {
   display: block;
+  margin-top: 8px;
   width: 10px;
-  height: 100%;
+  height: 10px;
   background-position: center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -128,11 +203,20 @@ body.loading .app-progress-bar.active .indeterminate:after {
 #webview {
   height: 100%;
   width: 100%;
-  padding-top: 30px;
+  /* padding-top: 30px; */
   display: inline-flex;
   transition: all 1s ease-in;
 }
-
+.dialog-overlay {
+  position: absolute;
+  /* display: none; */
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  background: #000000b3;
+  top: 0;
+  left: 0;
+}
 .content-loading {
   position: absolute;
   display: flex;
@@ -183,7 +267,7 @@ body.loading .loading-spinner {
   }
 }
 
-@keyframes indeterminate {
+/* @keyframes indeterminate {
   0% {
     left: -35%;
     right: 100%;
@@ -210,7 +294,7 @@ body.loading .loading-spinner {
     left: 107%;
     right: -8%;
   }
-}
+} */
 
 
 .messages-container {color: white;}
