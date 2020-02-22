@@ -59,8 +59,11 @@ ipcRenderer.on('message', (event, data) => {
   showMessage(data.msg, data.hide, data.replaceAll)
 })
 
-ipcRenderer.on('dialog-shown', (event) => {
-  document.body.classList.add('dialog-shown');
+ipcRenderer.on('set-dialog-visibility', (event, isVisible = false) => {
+  if (isVisible) {
+    document.body.classList.add('dialog-shown');
+  }
+  else document.body.classList.remove('dialog-shown')
 })
 
 function showMessage(message, hide = true, replaceAll = false) {

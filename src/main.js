@@ -101,6 +101,7 @@ ipcMain.on("app-is-offline", event => {
 
 ipcMain.on("app-close-dialog", event => {
     dialogWindow.hide();
+    mainWindow.webContents.send('set-dialog-visibility', false);
 });
 
 function createMainWindow() {
@@ -168,7 +169,7 @@ function createDialogWindow() {
 function showDialog() {
     sendMessage("change-loading-status", "off");
     dialogWindow.show();
-    mainWindow.webContents.send('dialog-shown');
+    mainWindow.webContents.send('set-dialog-visibility', true);
     dialogWindow.webContents.send("set-dialog-data", dialogWindow.data);
 }
 
