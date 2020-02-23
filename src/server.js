@@ -2,13 +2,10 @@ const express = require("express");
 const axios = require("axios");
 const URL = require("url").URL;
 const fs = require('fs');
+const path = require("path");
 
-const configPath = './'
+const configPath = path.join(__dirname, './update-config.json');
 let updateConfig = require(configPath);
-
-console.log(updateConfig.last_server);
-
-
 
 const port = 3000;
 
@@ -17,8 +14,14 @@ const updateServerListURL = updateConfig.servers_json_url;
 
 const saveLastServer = (url) => {
   updateConfig.last_server = url;
-
-  fs.writeFileSync('student-2.json', data);
+  try {
+    fs.writeFileSync(configPath, JSON.stringify(updateConfig), (err) => {
+    });
+    console.log('Last Server updated in config file');
+  }
+  catch (err) {
+    console.log(err);
+  }
 }
 
 const isValidUpdateInfo = (updateInfoObject) => {
@@ -41,12 +44,10 @@ const getAvailableServer = () => {
     // check last server locally
     const last_server = updateConfig.last_server;
     if (isValidURL(last_server)) {
-      console.log('check last server');
-      
       const updateInfoURL = `${last_server}/update-${process.platform}.json`;
       const response = await axios.get(updateInfoURL);
       if (isValidUpdateInfo(response.data)) {
-        resolve(url)
+        resolve(last_server)
       }
     }
 
@@ -68,7 +69,7 @@ const getAvailableServer = () => {
         }
       }
     });
-  }).catch (err => {
+  }).catch(err => {
     console.log(['getAvailableServer', err]);
     reject()
   })
@@ -80,7 +81,7 @@ const getUpdateInfo = async () => {
     const updateInfoURL = update_server + '/' + `update-${process.platform}.json`;
     const response = await axios.get(updateInfoURL)
 
-    return {updateInfo: response.data, update_server: update_server};
+    return { updateInfo: response.data, update_server: update_server };
   } catch (err) {
     throw err
   }
@@ -93,7 +94,7 @@ module.exports = {
     const server = express()
 
     server.post("/", async (req, res) => {
-      const {updateInfo, update_server} = await getUpdateInfo();
+      const { updateInfo, update_server } = await getUpdateInfo();
 
       if (Object.keys(updateInfo).length > 0) {
         const asarURL = `${update_server}/${updateInfo.asar}`;
