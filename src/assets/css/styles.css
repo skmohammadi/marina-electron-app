@@ -203,7 +203,7 @@ body.loading .app-progress-bar.active .indeterminate:after {
 #webview {
   height: 100%;
   width: 100%;
-  /* padding-top: 30px; */
+  background-color: white;
   display: inline-flex;
   transition: all 1s ease-in;
 }

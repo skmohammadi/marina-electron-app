@@ -2,7 +2,6 @@ const { app, BrowserWindow, ipcMain } = require("electron");
 
 const path = require("path");
 const { createServer, port } = require("./server");
-
 const EAU = require("electron-asar-hot-updater");
 
 const ASSETS_DIR = path.join(__dirname, "assets");
@@ -25,6 +24,7 @@ app.on("ready", () => {
     }, 3000);
 
     mainWindow.on("show", () => {
+        sendMessage("change-loading-status", "on");
         console.log("mainWindow");
         if (typeof app.online !== 'undefined' && app.online === false) {
             showDialog();
@@ -33,8 +33,8 @@ app.on("ready", () => {
     });
 
     if (dialogWindow) {
-        
         dialogWindow.webContents.on("dom-ready", () => {
+            mainWindow.webContents.send('set-dialog-visibility', true);
             dialogWindow.ready = true;
             mainWindow.isVisible() && showDialog();
         });
@@ -75,6 +75,7 @@ ipcMain.on("app-is-online", event => {
         checkForUpdate();
     }
 });
+
 ipcMain.on('app-confirm-exit', event => {
     dialogWindow.data = {
         title: "exit now?",
@@ -95,6 +96,7 @@ ipcMain.on('app-confirm-exit', event => {
     dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
 
 })
+
 ipcMain.on("app-is-offline", event => {
     console.log("app-is-offline");
 
@@ -170,10 +172,9 @@ function createDialogWindow() {
 }
 
 function showDialog() {
-    sendMessage("change-loading-status", "off");
     dialogWindow.show();
-    mainWindow.webContents.send('set-dialog-visibility', true);
     dialogWindow.webContents.send("set-dialog-data", dialogWindow.data);
+    mainWindow.webContents.send('set-dialog-visibility', true);
 }
 
 function sendMessage(event, data) {
@@ -220,15 +221,6 @@ function initUpdateDialog() {
     }
 }
 
-function quitApp() {
-    if (process.platform !== "darwin") app.quit();
-}
-
-function restartApp() {
-    app.relaunch();
-    app.exit(0);
-}
-
 function checkForUpdate() {
     EAU.init({
         api: `http://127.0.0.1:${port}`, // The API EAU will talk to
@@ -239,6 +231,7 @@ function checkForUpdate() {
     EAU.check(function(error, last, body) {
         if (error) {
             if (error === "no_update_available") {
+                // mainWindow.show()
                 return false;
             }
             if (
@@ -274,4 +267,13 @@ function checkForUpdate() {
             }, 2000);
         });
     });
+}
+
+function quitApp() {
+    if (process.platform !== "darwin") app.quit();
+}
+
+function restartApp() {
+    app.relaunch();
+    app.exit(0);
 }

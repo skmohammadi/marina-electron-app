@@ -8,6 +8,9 @@
 
 const { remote, ipcRenderer } = require('electron')
 const dns = require("dns");
+const path = require("path");
+const configPath = path.join(__dirname, '..', '..', 'update-config.json');
+let updateConfig = require(configPath);
 
 const hasInternet = () => typeof window.hasInternet === 'undefined' ? true : window.hasInternet;
 
@@ -17,9 +20,7 @@ if (mainWindowsBtnClose) mainWindowsBtnClose.addEventListener('click', closeWind
 if (mainWindowsBtnMinimize) mainWindowsBtnMinimize.addEventListener('click', minimizeWindow);
 
 function closeWindow() {
-  var window = remote.getCurrentWindow()
   ipcRenderer.send('app-confirm-exit');
-  // window.close()
 }
 
 function minimizeWindow() {
@@ -27,7 +28,7 @@ function minimizeWindow() {
   window.minimize()
 }
 
-const updateOnlineStatus = () => {  
+const updateOnlineStatus = () => {
   ipcRenderer.send('online-status-changed', navigator.onLine && hasInternet() ? 'online' : 'offline')
 }
 
@@ -41,7 +42,7 @@ ipcRenderer.on('change-loading-status', (event, status) => {
     document.body.classList.add('loading')
   }
   else {
-    document.body.className = document.body.className.replace("loading","");
+    document.body.className = document.body.className.replace("loading", "");
   }
 })
 
@@ -51,9 +52,34 @@ window.quitAndInstall = function () {
   electron.remote.autoUpdater.quitAndInstall()
 }
 
-ipcRenderer.on('console', (event, consoleMsg) => {
-  console.log(consoleMsg)
-})
+let webview;
+function showWebview() {
+  if (typeof webview === 'undefined') {
+    webview = document.getElementById("webview");
+    let url = 'https://google.com'
+    if (updateConfig.last_server) {
+
+      const url_obj = new URL(updateConfig.last_server)
+      url = url_obj.protocol + '//' + url_obj.host
+    }
+    webview.src = url;
+  }
+
+  const loadstart = () => {
+    document.body.classList.add('loading')
+  };
+
+  const loadstop = () => {
+    if (document.body.classList.contains('splash-loading')) {
+        document.body.classList.remove('splash-loading')
+    }
+
+    document.body.classList.remove('loading')
+  };
+
+  webview.addEventListener("did-start-loading", loadstart);
+  webview.addEventListener("did-stop-loading", loadstop);
+}
 
 ipcRenderer.on('message', (event, data) => {
   showMessage(data.msg, data.hide, data.replaceAll)
@@ -63,7 +89,10 @@ ipcRenderer.on('set-dialog-visibility', (event, isVisible = false) => {
   if (isVisible) {
     document.body.classList.add('dialog-shown');
   }
-  else document.body.classList.remove('dialog-shown')
+  else {
+    document.body.classList.remove('dialog-shown')
+    showWebview();
+  }
 })
 
 function showMessage(message, hide = true, replaceAll = false) {
@@ -89,16 +118,13 @@ function showMessage(message, hide = true, replaceAll = false) {
 const resolveDNS = () => {
   let status = ''
   dns.resolve("www.google.com", (err, addr) => {
-    status = err ? 'offline': 'online'
-    console.log({status});
-    
+    status = err ? 'offline' : 'online'
     ipcRenderer.send(`app-is-${status}`)
   })
 }
 
 ipcRenderer.on('check-connection', (event) => {
-  setTimeout(()=> {
-
+  setTimeout(() => {
     resolveDNS()
   }, 3000)
 })

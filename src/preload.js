@@ -17,26 +17,3 @@ function liveCheck() {
 }
 
 liveCheck();
-
-window.addEventListener("DOMContentLoaded", () => {
-
-    const webview = document.getElementById("webview");
-
-    const loadstart = () => {
-        document.body.classList.add('loading')
-    };
-
-    const loadstop = () => {
-        if (document.body.classList.contains('splash-loading')) {
-            setTimeout(() => {
-                document.body.classList.remove('splash-loading')
-            }, 2000);
-        }
-
-        // document.body.className = document.body.className.replace("loading","");
-        document.body.classList.remove('loading')
-    };
-
-    webview.addEventListener("did-start-loading", loadstart);
-    webview.addEventListener("did-stop-loading", loadstop);
-});
