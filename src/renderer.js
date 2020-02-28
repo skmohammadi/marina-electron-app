@@ -79,6 +79,11 @@ function showWebview() {
 
   webview.addEventListener("did-start-loading", loadstart);
   webview.addEventListener("did-stop-loading", loadstop);
+  
+  webview.addEventListener("did-stop-loading", () => {
+    webview.blur();
+    webview.focus();
+  });
 }
 
 ipcRenderer.on('message', (event, data) => {
