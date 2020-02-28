@@ -95,6 +95,10 @@ ipcRenderer.on('set-dialog-visibility', (event, isVisible = false) => {
   }
 })
 
+ipcRenderer.on('show-webview', event => {
+  showWebview();
+})
+
 function showMessage(message, hide = true, replaceAll = false) {
   const messagesContainer = document.querySelector('.messages-container')
   const msgId = lastMsgId++ + 1

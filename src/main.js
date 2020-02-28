@@ -231,7 +231,7 @@ function checkForUpdate() {
     EAU.check(function(error, last, body) {
         if (error) {
             if (error === "no_update_available") {
-                // mainWindow.show()
+                mainWindow.webContents.send('show-webview');
                 return false;
             }
             if (
