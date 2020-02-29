@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+const gotTheLock = app.requestSingleInstanceLock()
 
 const path = require("path");
 const { createServer, port } = require("./server");
@@ -10,43 +11,54 @@ let mainWindow;
 let splashWindow;
 let dialogWindow;
 
-app.on("ready", () => {
-    app.server = createServer(app);
-    console.log("app is ready");
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on("ready", () => {
+        app.server = createServer(app);
+        console.log("app is ready");
 
-    createSplashWindow();
-    createMainWindow();
-    createDialogWindow();
+        createSplashWindow();
+        createMainWindow();
+        createDialogWindow();
 
-    setTimeout(() => {
-        splashWindow.destroy();
-        mainWindow.show();
-    }, 3000);
+        setTimeout(() => {
+            splashWindow.destroy();
+            mainWindow.show();
+        }, 3000);
 
-    mainWindow.on("show", () => {
-        sendMessage("change-loading-status", "on");
-        console.log("mainWindow");
-        if (typeof app.online !== 'undefined' && app.online === false) {
-            showDialog();
-        }
-        if (dialogWindow.ready) showDialog();
-    });
-
-    if (dialogWindow) {
-        dialogWindow.webContents.on("dom-ready", () => {
-            mainWindow.webContents.send('set-dialog-visibility', true);
-            dialogWindow.ready = true;
-            mainWindow.isVisible() && showDialog();
+        mainWindow.on("show", () => {
+            sendMessage("change-loading-status", "on");
+            console.log("mainWindow");
+            if (typeof app.online !== 'undefined' && app.online === false) {
+                showDialog();
+            }
+            if (dialogWindow.ready) showDialog();
         });
-    }
-});
+
+        if (dialogWindow) {
+            dialogWindow.webContents.on("dom-ready", () => {
+                mainWindow.webContents.send('set-dialog-visibility', true);
+                dialogWindow.ready = true;
+                mainWindow.isVisible() && showDialog();
+            });
+        }
+    });
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone tried to run a second instance, we should focus our window.
+        if (myWindow) {
+            if (myWindow.isMinimized()) myWindow.restore()
+            myWindow.focus()
+        }
+    })
+}
 
 // Quit when all windows are closed.
-app.on("window-all-closed", function() {
+app.on("window-all-closed", function () {
     quitApp();
 });
 
-app.on("activate", function() {
+app.on("activate", function () {
     if (mainWindow === null) createWindow();
 });
 
@@ -81,15 +93,15 @@ ipcMain.on('app-confirm-exit', event => {
         title: "exit now?",
         message: "Are you sure to exit app?",
         actions: [{
-                id: "exit",
-                label: "EXIT",
-                callback: "quit"
-            },
-            {
-                id: "cancel",
-                label: "CANCEL",
-                callback: "close-dialog"
-            }
+            id: "exit",
+            label: "EXIT",
+            callback: "quit"
+        },
+        {
+            id: "cancel",
+            label: "CANCEL",
+            callback: "close-dialog"
+        }
         ]
     };
 
@@ -132,7 +144,7 @@ function createMainWindow() {
 
     mainWindow.loadFile(path.join(ASSETS_DIR, "htmls", "index.html"));
 
-    mainWindow.on("closed", function() {
+    mainWindow.on("closed", function () {
         console.log("mainWindow: closed");
         mainWindow = null;
     });
@@ -186,15 +198,15 @@ function initConnectionLostDialog() {
         title: "Connection Lost ...",
         message: "Check your internet connection and try again",
         actions: [{
-                id: "retry",
-                label: "RETRY",
-                callback: "check-network"
-            },
-            {
-                id: "exit",
-                label: "EXIT",
-                callback: "quit"
-            }
+            id: "retry",
+            label: "RETRY",
+            callback: "check-network"
+        },
+        {
+            id: "exit",
+            label: "EXIT",
+            callback: "quit"
+        }
         ]
     };
     dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
@@ -206,15 +218,15 @@ function initUpdateDialog() {
             title: "New update released!",
             message: "To get new update click on Download:",
             actions: [{
-                    id: "download",
-                    label: "DOWNLOAD",
-                    callback: "download-update"
-                },
-                {
-                    id: "cancel",
-                    label: "CANCEL",
-                    callback: "close-dialog"
-                }
+                id: "download",
+                label: "DOWNLOAD",
+                callback: "download-update"
+            },
+            {
+                id: "cancel",
+                label: "CANCEL",
+                callback: "close-dialog"
+            }
             ]
         };
         dialogWindow.loadFile(path.join(ASSETS_DIR, "htmls", "dialog.html"));
@@ -228,7 +240,7 @@ function checkForUpdate() {
         debug: true // Default: false.
     });
 
-    EAU.check(function(error, last, body) {
+    EAU.check(function (error, last, body) {
         if (error) {
             if (error === "no_update_available") {
                 mainWindow.webContents.send('show-webview');
@@ -245,7 +257,7 @@ function checkForUpdate() {
 
         initUpdateDialog();
 
-        EAU.progress(function(state) {
+        EAU.progress(function (state) {
             let percent = parseInt(parseFloat(state.percent) * 100);
             let message = `Downloading updates... ${percent}%`;
             dialogWindow.webContents.send("update-dialog-message", message);
@@ -253,7 +265,7 @@ function checkForUpdate() {
     });
 
     ipcMain.on("app-download-update", event => {
-        EAU.download(function(error) {
+        EAU.download(function (error) {
             let message = `Downloading updates... 100%`;
             dialogWindow.webContents.send("update-dialog-message", message);
 
@@ -262,7 +274,7 @@ function checkForUpdate() {
                 return false;
             }
             // restartApp();
-            setTimeout(function() {
+            setTimeout(function () {
                 app.exit(0);
             }, 2000);
         });
