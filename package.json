@@ -34,7 +34,7 @@
   "devDependencies": {
     "adm-zip": "^0.4.13",
     "cross-env": "^7.0.0",
-    "electron": "^7.1.9",
+    "electron": "^9.4.0",
     "electron-builder": "^22.3.2"
   },
   "dependencies": {
